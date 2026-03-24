@@ -8,4 +8,5 @@
 .DS_Store
 
 # Firebase/other backend secrets
-backend/*.json
+backend\vrinda-6abfa-firebase-adminsdk-fbsvc-083ff1866e.json
+vendor\
