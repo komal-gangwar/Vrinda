@@ -1,0 +1,82 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #F9F9F9;
+}
+
+.container {
+  width: 100%;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.profile-icon {
+  background-color: #C7C7CB;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.bus-card {
+  background-color: white;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  margin: 0 20px 20px 20px; /* 20px margin on left and right */
+  width: calc(100% - 40px); /* 100% minus left+right margin */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.bus-image {
+  width: 80px;
+  height: auto;
+  margin-right: 16px;
+}
+
+.bus-info {
+  flex: 1;
+}
+
+.bus-number {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.bus-route {
+  font-size: 16px;
+  color: #555;
+}
+
+.bus-stops {
+  font-size: 14px;
+  color: #888;
+  margin: 4px 0 12px;
+}
+
+.track-button {
+  background-color: #4285F4;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.track-button:hover {
+  background-color: #4285F4;
+}

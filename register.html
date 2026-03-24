@@ -1,0 +1,59 @@
+
+  <div class="regihu">
+  <div class="container">
+    <div class="logo">
+      <img src="images/logo.png" alt="Bus Icon" class="bus-icon" />
+      <img src="images/vrinda.png" alt="VRINDA Text" class="vrinda-text" />
+    </div>
+
+    <h2>Create your account</h2>
+
+    <form id="register-form">
+      <input type="text" id="name" name="name" placeholder="Full Name" required>
+<input type="email" id="email" name="email" placeholder="Email address" required>
+<input type="password" id="password" name="password" placeholder="Password" required>
+<input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+
+      <!-- </div> -->
+      <div id="error-msg" class="error-msg" style="color: green;"></div>
+      
+
+      <button type="button" id="regi-btn" class="btn btn-primary">Register</button>
+    </form>
+
+    <p class="login-link">Already have an account? <a onclick="document.getElementById('login').click(); ">Log In</a></p>
+  </div>
+</div>
+
+<script>
+  document.getElementById("regi-btn").addEventListener("click", async function (event) {
+    event.preventDefault(); // 🔒 this ensures it does NOT submit
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("confirmPassword", confirmPassword);
+
+    const res = await fetch("backend/register.php", {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await res.text();
+    const msgBox = document.getElementById("error-msg");
+
+    if (result.trim() === "1") {
+      msgBox.textContent = "Registration successful! Redirecting to login...";
+      setTimeout(() => {
+        document.getElementById('login').click();
+      }, 1000);
+    } else {
+      msgBox.textContent = result.trim() === "0" ? "Password not confirmpassword not matched." : "Something went wrong.";
+    }
+  });
+</script>

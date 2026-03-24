@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Bus Management</title>
+    <style>
+        body {
+            background-color: #FFFDF5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .card-container {
+            background-color: #FFFBF8;
+            padding: 10px 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.08);
+            font-size: 14px;
+        }
+
+        .bus-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .bus-info img {
+            width: 35px;
+            margin-right: 8px;
+        }
+
+        .bus-info h4 {
+            margin: 0 0 4px;
+            font-size: 16px;
+        }
+
+        .bus-info p,
+        .bus-info small {
+            margin: 0;
+            font-size: 12px;
+        }
+
+        .edit-btn {
+            background-color: #2F1A55;
+            color: white;
+            padding: 6px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .edit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2F1A55;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .fab-menu {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #FFFBF8;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+        }
+
+        .fab-menu button {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .fab-menu button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .modal,
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 9;
+        }
+
+        .modal {
+            background-color: #FFFBF8;
+            width: 320px;
+            height: 320px;
+            border-radius: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .modal h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        select,
+        .modal button,
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+
+
+        .card-container.inactive {
+            filter: grayscale(100%);
+            opacity: 0.6;
+        }
+
+        /* Style for buttons inside the modal */
+        .modal .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .modal button {
+            width: 48%;
+            /* Give each button equal width */
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal button:nth-child(1) {
+            background-color: #ccc;
+         
+            color: #2F1A55;
+        }
+
+        .modal button:nth-child(2) {
+            background-color: #2F1A55;
+            color : white;
+        }
+
+        .modal button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="busCards"></div>
+
+    <div class="fab" onclick="toggleFabMenu()">+</div>
+    <div class="fab-menu" id="fabMenu">
+        <button onclick="addBus()">Add Bus</button>
+        <button onclick="addDriver()">Add Driver</button>
+        <button onclick="openAddRouteModal()">Add Route</button>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <h3>Edit Bus</h3>
+        <select id="driverSelect"></select>
+        <select id="routeSelect"></select>
+        <select id="descriptionSelect"></select>
+        <select id="statusSelect">
+            <option value="Running">Running</option>
+            <option value="Not Running">Not Running</option>
+        </select>
+        <div class="button-container">
+            <button onclick="closeModal()">Cancel</button> <!-- Cancel Button -->
+            <button onclick="updateBus()">Update</button> <!-- Update Button -->
+        </div>
+    </div>
+
+    <!-- Route Modal -->
+    <div class="modal" id="routeModal">
+        <h3>Add New Route</h3>
+        <input type="text" id="newRoute" placeholder="Route Name">
+        <input type="text" id="newDescription" placeholder="Route Description">
+        <div class="button-container">
+            <button onclick="closeModal()">Cancel</button> <!-- Cancel Button -->
+            <button onclick="saveNewRoute()">Save Route</button> <!-- Save Route Button -->
+        </div>
+    </div>
+
+
+    <script>
+        let busData = [
+            { id: 5745, driver: 'Driver 1', route: 'SRMS - Satellite', description: 'SRMS- IVRI Flyover- Delapeer- Suncity - Mahanagar- Satellite', status: 'Running' }
+        ];
+
+        const drivers = ['Driver 1', 'Driver 2'];
+        const routes = ['SRMS - Satellite', 'SRMS - Civil'];
+        const descriptions = ['IVRI Flyover - Delapeer - Suncity - Mahanagar - Satellite', 'Civil Lines - Stadium - SRMS'];
+
+        function renderCards() {
+            const container = document.getElementById('busCards');
+            container.innerHTML = '';
+            busData.forEach((bus, i) => {
+                container.innerHTML += `
+          <div class="card-container ${bus.status === 'Not Running' ? 'inactive' : ''}">
+            <div class="bus-info">
+              <img src="bus1.png" alt="bus">
+              <div>
+                <h4>${bus.id}</h4>
+                <p>${bus.driver}</p>
+                <p>${bus.route}</p>
+                <small>${bus.description}</small>
+                <small>Status: ${bus.status}</small>
+              </div>
+            </div>
+            <button class="edit-btn" onclick="openEditModal(${i})">Edit</button>
+          </div>
+        `;
+            });
+        }
+
+        function openEditModal(index) {
+            const modal = document.getElementById('editModal');
+            const overlay = document.getElementById('overlay');
+            modal.dataset.index = index;
+            fillDropdowns(index);
+            modal.style.display = 'flex';
+            overlay.style.display = 'block';
+        }
+
+        function toggleFabMenu() {
+            const menu = document.getElementById('fabMenu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('routeModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function fillDropdowns(index = 0) {
+            const bus = busData[index];
+
+            const driverSelect = document.getElementById('driverSelect');
+            driverSelect.innerHTML = drivers.map(driver =>
+                `<option value="${driver}" ${bus.driver === driver ? 'selected' : ''}>${driver}</option>`
+            ).join('');
+
+            const routeSelect = document.getElementById('routeSelect');
+            routeSelect.innerHTML = routes.map(route =>
+                `<option value="${route}" ${bus.route === route ? 'selected' : ''}>${route}</option>`
+            ).join('');
+
+            const descriptionSelect = document.getElementById('descriptionSelect');
+            descriptionSelect.innerHTML = descriptions.map(desc =>
+                `<option value="${desc}" ${bus.description === desc ? 'selected' : ''}>${desc}</option>`
+            ).join('');
+
+            const statusSelect = document.getElementById('statusSelect');
+            statusSelect.value = bus.status || 'Running';
+        }
+
+        function updateBus() {
+            const index = document.getElementById('editModal').dataset.index;
+            busData[index].driver = document.getElementById('driverSelect').value;
+            busData[index].route = document.getElementById('routeSelect').value;
+            busData[index].description = document.getElementById('descriptionSelect').value;
+            busData[index].status = document.getElementById('statusSelect').value;
+            closeModal();
+            renderCards();
+        }
+
+        function addBus() {
+            const id = prompt('Enter Bus ID:');
+            if (id) {
+                busData.push({ id: id, driver: drivers[0], route: routes[0], description: descriptions[0], status: 'Running' });
+                renderCards();
+            }
+        }
+
+        function addDriver() {
+            const name = prompt('Enter Driver Name:');
+            if (name) drivers.push(name);
+        }
+
+        function openAddRouteModal() {
+            document.getElementById('routeModal').style.display = 'flex';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function saveNewRoute() {
+            const route = document.getElementById('newRoute').value;
+            const desc = document.getElementById('newDescription').value;
+            if (route && desc) {
+                routes.push(route);
+                descriptions.push(desc);
+                closeModal();
+            }
+        }
+
+        renderCards();
+    </script>
+</body>
+
+</html>

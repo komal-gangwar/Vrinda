@@ -1,0 +1,190 @@
+.profilehu {
+  margin: 0;
+    padding: 40px 10px;
+    font-family: "Segoe UI", sans-serif;
+    background-color: #F2FFF5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  /* body {
+    margin: 0;
+    padding: 40px 20px;
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  } */
+
+  .card {
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .profile-info {
+    display: flex;
+    align-items: center;
+  }
+
+  .avatar {
+    background-color: #C7C7CB;
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-right: 15px;
+  }
+
+  .name-email {
+    line-height: 1.4;
+  }
+
+  .name-email .name {
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .name-email .email {
+    font-size: 14px;
+    color: grey;
+  }
+
+  .info-section {
+    margin: 25px 0;
+  }
+
+  .info-label {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+
+  .info-value {
+    font-size: 18px;
+    color: grey;
+    margin-bottom: 15px;
+  }
+
+  .logout {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 30px;
+  }
+
+  .edit-image {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+
+  .logout-image {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  .logout-text {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+.edithu{
+    margin: 0;
+    padding: 40px 10px;
+    background-color: #F2FFF5;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+
+  .card {
+    background: #f9f9f9;
+    max-width: 400px;
+    width: 100%;
+    padding: 30px 30px 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    background: #C7C7CB;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+
+  .user-info {
+    flex-grow: 1;
+  }
+
+  .user-info h2 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  .user-info p {
+    margin: 2px 0 0 0;
+    color: #999;
+    font-size: 14px;
+  }
+
+  .tick {
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+  }
+
+  select {
+    width: calc(100% - 10px);
+    padding: 16px 36px 16px 12px;
+    margin-top: 20px;
+    margin-right: 10px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 18px;
+    background-color: #f9f9f9;
+    color: #666;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg width='13' height='9' viewBox='0 0 13 9' xmlns='http://www.w3.org/2000/svg'><path d='M6.5 9L12.9952 0H0.00480938L6.5 9Z' fill='%23D9D9D9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 13px 9px;
+  }
+
+  select:invalid {
+    color: #C7C7CB;
+  }
+}

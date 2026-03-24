@@ -1,0 +1,99 @@
+<div class="loginhu">
+  <div class="login-container" style="width: 100rem;">
+    <div class="login-card">
+      <div class="logo">
+        <img src="images/logo.png" alt="Bus Icon" class="bus-icon">
+        <img src="images/vrinda.png" alt="VRINDA Text" class="vrinda-text">
+      </div>
+
+      <h2>Log In to your account</h2>
+
+      <!-- HTMX form -->
+      <form id="login-form">
+        <input type="email" name="email" id="email" placeholder="Email address" required />
+        <input type="password" name="password" id="password" placeholder="Password" required />
+        <input type="hidden" name="auth" id="authToken" />
+        <div id="error-msg" class="error-msg"></div>
+      
+        <!-- ⛔ Use button type="button" to STOP auto form submit -->
+        <button type="button" id="login-btn" class="btn btn-primary">Log In</button>
+      </form>
+      
+      
+      <p class="signup-text">
+        Don’t have an account? <a onclick="document.getElementById('regi').click(); ">Sign Up</a>
+      </p>
+    </div>
+  </div>
+</div>
+<button id="regi"
+        hx-get="register.html"
+        hx-target="#main-content"
+        hx-swap="innerHTML"
+        style="display: none;">
+</button>
+<script>
+  document.getElementById("login-btn").addEventListener("click", async function (event) {
+    event.preventDefault(); // 🔒 this ensures it does NOT submit
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const auth = document.getElementById("authToken").value;
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("auth", auth);
+
+    const res = await fetch("backend/login.php", {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await res.text();
+    const msgBox = document.getElementById("error-msg");
+    const card = document.querySelector(".login-card");
+
+    if (result.trim() === "1") {
+      document.getElementById('load-home').click();
+    } else {
+      msgBox.textContent = result.trim() === "0" ? "Email not found." : "Incorrect password.";
+      card.classList.add("shake");
+      setTimeout(() => card.classList.remove("shake"), 500);
+    }
+  });
+</script>
+
+
+<script src="js/noti.js" type="module"></script>
+
+<script>
+  
+  
+  // 👁️ Password toggle with PNG icons
+  const passwordInput = document.querySelector('input[name="password"]');
+  const wrapper = document.createElement("div");
+  wrapper.style.position = "relative";
+
+  passwordInput.parentNode.insertBefore(wrapper, passwordInput);
+  wrapper.appendChild(passwordInput);
+
+  const eyeIcon = document.createElement("img");
+  eyeIcon.src = "images/view.png";
+  eyeIcon.alt = "Toggle Password Visibility";
+  eyeIcon.style.position = "absolute";
+  eyeIcon.style.right = "10px";
+  eyeIcon.style.transform = "translateY(-50%)";
+  eyeIcon.style.cursor = "pointer";
+  eyeIcon.style.width = "20px";
+  eyeIcon.style.height = "20px";
+  eyeIcon.style.bottom = "14px";
+  eyeIcon.style.opacity = 0.35;
+  wrapper.appendChild(eyeIcon);
+
+  eyeIcon.addEventListener("click", () => {
+    const isHidden = passwordInput.type === "password";
+    passwordInput.type = isHidden ? "text" : "password";
+    eyeIcon.src = isHidden ? "images/hidden.png" : "images/view.png";
+  });
+</script>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vrinda App</title>
+  <link rel="stylesheet" href="onboard.css">
+</head>
+
+<body>
+  <div class="splash-screen">
+    <img src="logo1.png" alt="Vrinda Logo" class="logo">
+  </div>
+</body>
+
+</html>
+
+<script>
+  // Redirect after 5 seconds (5000 ms)
+  setTimeout(() => {
+    window.location.href = "login.html"; // Update with your actual login page file name
+  }, 5000);
+</script>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body,
+  html {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .splash-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F2FFF5;
+    height: 100vh;
+  }
+
+  .logo {
+    width: 200px;
+    max-width: 80%;
+    position: absolute;
+    animation: driveAcross 5s ease-in-out forwards;
+  }
+
+  @keyframes driveAcross {
+    0% {
+      transform: translateX(-100%) scale(0.9);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(0%) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(0%) scale(1);
+      opacity: 1;
+    }
+  }
+</style>

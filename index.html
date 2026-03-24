@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vrinda App</title>
+  <link rel="stylesheet" href="css/onboard.css">
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+  
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/log_in.css">
+  <link rel="stylesheet" href="css/track.css" />
+  <link rel="stylesheet" href="css/register.css">
+  
+    <script>
+  var bus = null;
+</script>
+
+  </script>
+    
+        
+  <script src="https://apis.mapmyindia.com/advancedmaps/v1/1334b332ebba9c99ff4870d193ba88dc/map_load?v=1.5"></script>
+</head>
+<body>
+
+  <!-- Splash screen (shows first) -->
+  <div id="main-content">
+    <div class="onbordhu">
+    <div class="splash-screen">
+      <img src="images/logomain.png" alt="Vrinda Logo" class="logo">
+    </div>
+  </div>  </div>
+
+  <!-- Hidden button to trigger htmx load after timeout -->
+  <button id="load-home" 
+          hx-get="home.html" 
+          hx-target="#main-content" 
+          hx-swap="innerHTML"
+          style="display: none;">
+  </button>
+  <button id="logout"
+        hx-get="backend/logout.php"
+        hx-target="#main-content"
+        hx-swap="innerHTML"
+        style="display: none;">
+</button>
+<button id="login"
+        hx-get="login.html"
+        hx-target="#main-content"
+        hx-swap="innerHTML"
+        style="display: none;">
+</button>
+  
+
+
+  
+  <script>
+    
+    setTimeout(() => {
+      document.getElementById('load-home').click(); // Trigger htmx load after 5 seconds
+    }, 5000);
+    function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  } 
+  function getInitials(name) {
+    const names = name.trim().split(" ");
+    if (names.length === 1) return names[0][0].toUpperCase();
+    return (names[0][0]).toUpperCase();
+  }
+  function refreshNameFromCookie() {
+  const cookieMatch = document.cookie.match(/(?:^|;\s*)name=([^;]+)/);
+  if (cookieMatch) {
+    const fullName = decodeURIComponent(cookieMatch[1]);
+    const initials = getInitials(fullName);
+    const icon = document.getElementById("profileIcon");
+    if (icon) icon.textContent = initials;
+  }
+}
+
+  let busSelect,stopSelect,currentBusId,currentStop,userFullName;
+  </script>
+
+</body>
+
+
+</html>

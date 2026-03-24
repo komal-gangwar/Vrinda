@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bus Selection</title>
+  <style>
+    
+  </style>
+</head>
+<body>
+<div class="edithu">
+<div class="card">
+  <div class="profile">
+    <div class="profile-icon avatar" id="profileIcon"></div>
+    <div class="user-info">
+      <h2></h2>
+      <p></p>
+    </div>
+    <img src="images/tick.png" class="tick" alt="Tick Mark" />
+  </div>
+
+  <select id="bus" required>
+    <option value="" disabled selected>Select a Bus</option>
+  </select>
+
+  <select id="stop" required>
+    <option value="" disabled selected>Select a Stop</option>
+  </select>
+</div>
+</div>
+<button id="load-profile"
+        hx-get="profile.html"
+        hx-target="#main-content"
+        hx-swap="innerHTML"
+        style="display: block;">
+</button>
+<script src="js/avtar.js"></script>
+<script>
+  
+  busSelect = document.getElementById("bus");
+  stopSelect = document.getElementById("stop");
+
+  currentBusId = null;
+  currentStop = null;
+
+  // Get current user data
+  fetch("backend/getUserData.php")
+    .then((res) => res.json())
+    .then((data) => {
+      document.querySelector(".user-info h2").textContent = data.name;
+      document.querySelector(".user-info p").textContent = data.email;
+      currentBusId = data.bus_number;
+      currentStop = data.stops;
+
+      loadBuses();
+      loadStops();
+    })
+    .catch((err) => console.error("Failed to load user info", err));
+
+    function loadBuses() {
+  fetch("backend/bus.php")
+    .then((res) => res.json())
+    .then((buses) => {
+      busSelect.innerHTML = '<option value="" disabled>Select a Bus</option>';
+      buses.forEach((bus) => {
+        const option = document.createElement("option");
+        option.value = bus.BUS_ID;
+        option.textContent = bus.BUS_NUMBER;
+        if (bus.BUS_NUMBER == currentBusId) {
+          option.selected = true;
+        }
+        busSelect.appendChild(option);
+      });
+    });
+}
+
+
+function loadStops() {
+  fetch("backend/stops.php")
+    .then((res) => res.json())
+    .then((stops) => {
+      stopSelect.innerHTML = '<option value="" disabled>Select a Stop</option>';
+      stops.forEach((stop) => {
+        const option = document.createElement("option");
+        option.value = stop.STOP_ID;
+        option.textContent = stop.STOP_NAME;
+        if (stop.STOP_NAME == currentStop) {
+          option.selected = true;
+        }
+        stopSelect.appendChild(option);
+      });
+    });
+}
+
+
+  // Save selection
+  document.querySelector(".tick").addEventListener("click", () => {
+    const busId = busSelect.value;
+    const stopId = stopSelect.value;
+
+    if (!busId || !stopId) {
+      alert("Please select both bus and stop");
+      return;
+    }
+
+    fetch("backend/updater.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        bus_id: busId,
+        stop: stopId,
+      }),
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status==1) {
+        document.getElementById('load-profile').click();
+      } else {
+        alert("Update failed: " + "try again");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Something went wrong.");
+    });
+  });
+</script>
+
+</body>
+</html>

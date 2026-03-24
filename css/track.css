@@ -1,0 +1,115 @@
+.trackhu{
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+        height: 100%;
+        width: 100%;
+        font-family: Arial, sans-serif;
+
+
+#map {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: 0;
+    }
+
+
+/* Toggle Button */
+.toggle-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  padding: 10px 15px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  background-color: transparent;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+  transform: translateX(calc(-100% - 20px));
+  transition: transform 0.3s ease;
+  z-index: 999;
+  touch-action: pan-y;
+  padding:10px;
+  height:calc(100% - 40px);
+  margin: 10px;
+
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar h3 {
+  margin: 0;
+  color: #333;
+}
+
+.sidebar p {
+  margin: 5px 0 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+.route-list {
+  position: relative;
+  padding-left: 10px;
+  margin-top: 10px;
+}
+
+.route-line {
+  position: absolute;
+  left: 1rem;
+  top: 7px;
+  bottom: 10px;
+  width: 2px;
+  border-left: 2px dashed #888;
+  z-index: 0;
+}
+
+.route-step {
+  display: flex;
+  align-items: center;
+  margin: 0.8rem 0;
+  position: relative;
+}
+
+.circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid green;
+  background: white;
+  margin-right: 10px;
+  z-index: 1;
+}
+
+.route-step span {
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+}
+.crossed .circle {
+  border-color: rgb(165, 2, 2);
+  background: white;
+}
+
+.crossed span {
+  color: #999;
+}
+}

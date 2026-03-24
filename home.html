@@ -1,0 +1,39 @@
+<div class="homehu">
+
+  <div class="top-bar">
+    <img style="display: none;" src="images/logo.png" class="site-logo" alt="Site Logo">
+    
+    <div class="profile-header" id="profileClick">
+      <div class="profile-icon" id="profileIcon"></div>
+    </div>
+  </div>
+  
+
+  <div id="busCardsContainer"></div>
+</div>
+<button id="load-profile"
+        hx-get="profile.html"
+        hx-target="#main-content"
+        hx-swap="innerHTML"
+        hx-push-url="profile"
+        style="display: block;">
+</button>
+</div>
+<!-- Trigger profile load via HTMX -->
+
+
+<script>
+    refreshNameFromCookie();
+  setTimeout(()=>{
+    userFullName = getCookie("name");
+   document.getElementById("profileIcon").textContent = getInitials(userFullName);
+  },2000);
+  document.getElementById("profileClick").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById('load-profile').click();
+  });
+    
+</script>
+
+<script src="js/check.js"></script>
+<script src="js/home.js"></script>

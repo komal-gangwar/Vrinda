@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Bus Management</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://apis.mapmyindia.com/advancedmaps/v1/1334b332ebba9c99ff4870d193ba88dc/map_load?v=1.5"></script>
+</head>
+
+<body>
+    <p id="coordsWarning" style="color: red; font-weight: bold;"></p>
+    <div id="busCards"></div>
+    <!-- <div id="stopsWithoutCoordsContainer"></div> -->
+
+
+    <div class="fab" onclick="toggleFabMenu()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M80-560v-320h320v320H80Zm80-80h160v-160H160v160ZM80-80v-320h320v320H80Zm80-80h160v-160H160v160Zm400-400v-320h320v320H560Zm80-80h160v-160H640v160ZM560-80v-320h320v320H560Zm80-80h160v-160H640v160ZM320-640Zm0 320Zm320-320Zm0 320Z"/></svg></div>
+    <div class="fab-menu" id="fabMenu">
+        <button onclick="addBus()">+ Add Bus</button>
+        <button onclick="addDriver()">+ Add Driver</button>
+        <button onclick="openAddRouteModal()">+ Add Route</button>
+        <button onclick="openUnmappedStopsModal()">+ Add Stop coords</button>
+        <hr>
+        <button onclick="deleteBusPrompt()">⌫ Delete Bus</button>
+        <button onclick="deleteDriverPrompt()">⌫ Delete Driver</button>
+        <button onclick="deleteRoutePrompt()">⌫ Delete Route</button>
+    </div>
+    
+
+    <div class="overlay" id="overlay" onclick="closeModal()"></div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <h3>Edit Bus</h3>
+        <select id="driverSelect"></select>
+        <select id="routeSelect"></select>
+        <select id="descriptionSelect"></select>
+        <select id="statusSelect">
+            <option value="Running" selected>Running</option>
+            <option value="Not Running">Not Running</option>
+        </select>
+        <div class="button-container">
+            <button onclick="closeModal()">Cancel</button>
+            <button onclick="updateBus()">Update</button>
+        </div>
+    </div>
+
+    <!-- Route Modal -->
+    <div class="modal" id="routeModal">
+        <h3>Add New Route</h3>
+        <input type="text" id="newRoute" placeholder="Route Name" />
+        <input type="text" id="newDescription" placeholder="Route Description" />
+        <div class="button-container">
+            <button onclick="closeModal()">Cancel</button>
+            <button onclick="saveNewRoute()">Save Route</button>
+        </div>
+    </div>
+
+    <!-- Map Modal to Pick Coordinates -->
+    <div class="modal" id="mapModal">
+        <div class="modal-content">
+            <h3 id="namestp"></h3>
+                 <!-- 👈 Shows stop name -->
+            <div id="mapContainer" style="height: 275px; width: 100%;"></div>
+            <div style="margin-top: 12px;">
+                <button id="saveCoordsButton">Save Coordinates</button>
+                <button onclick="document.getElementById('mapModal').style.display='none'">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unmapped Stops Modal -->
+<div class="modal1 modal" id="unmappedStopsModal">
+    <div class="modal-content">
+        <button onclick="document.getElementById('unmappedStopsModal').style.display='none'; document.getElementById('overlay').style.display='none';" class="closebtn" style="
+    width: auto;
+    background-color: transparent;
+    right: 1rem;
+    top: 2rem;
+    position: absolute;
+"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"></path></svg></button>
+        <h3>Stops Missing Coordinates</h3>
+        
+        <div id="unmappedStopsList" style="max-height: 250px; overflow-y: auto;"></div>
+        <div class="button-container">
+        </div>
+    </div>
+</div>
+
+    
+
+    <script>
+        function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
+
+const userFullName = getCookie("admin");
+if (userFullName==="yes") {} else {
+  window.location.href = "dlogin.html";// fallback
+}
+        let busData, drivers, routes, descriptions;
+
+        let map, marker, selectedLat, selectedLng;
+
+
+        async function kuch_bhi() {
+            try {
+                const container = document.getElementById("busCards");
+                container.innerHTML = "";
+
+                busData.forEach(({ id, driver, route, description, status }, i) => {
+                    container.innerHTML += `
+                        <div class="card-container ${status === 'n' ? 'inactive' : ''}">
+                            <div class="bus-info">
+                                <img src="images/buses.png" alt="bus">
+                                <div>
+                                    <h4>${id}</h4>
+                                    <p>${driver.trim() === "" ? "not selected" : driver}</p>
+                                    <p>${route}</p>
+                                    <small>${description}</small>
+                                    <small><b>Status: ${status === "y" ? "running" : "not running"}</b></small>
+                                </div>
+                            </div>
+                            <button class="edit-btn" onclick="openEditModal(${i})">Edit</button>
+                        </div>`;
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        async function kuch_bhi2() {
+            const response = await fetch('backend/add.php');
+            const data = await response.json();
+            drivers = data.drivers;
+            routes = data.routes;
+            descriptions = data.descriptions;
+
+            const response1 = await fetch('backend/admin.php');
+            busData = await response1.json();
+            kuch_bhi();
+        }
+
+        kuch_bhi2();
+
+        function openEditModal(index) {
+            const modal = document.getElementById('editModal');
+            const overlay = document.getElementById('overlay');
+            modal.dataset.index = index;
+            fillDropdowns(index);
+            modal.style.display = 'flex';
+            overlay.style.display = 'block';
+        }
+
+        function toggleFabMenu() {
+            const menu = document.getElementById('fabMenu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('routeModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            kuch_bhi();
+        }
+
+        function fillDropdowns(index = 0) {
+            const bus = busData[index];
+
+            const driverSelect = document.getElementById('driverSelect');
+            driverSelect.innerHTML = drivers.map(driver =>
+                `<option value="${driver}" ${bus.driver === driver ? 'selected' : ''}>${driver}</option>`
+            ).join('');
+
+            const routeSelect = document.getElementById('routeSelect');
+            routeSelect.innerHTML = routes.map(route =>
+                `<option value="${route}" ${bus.route === route ? 'selected' : ''}>${route}</option>`
+            ).join('');
+
+            const descriptionSelect = document.getElementById('descriptionSelect');
+            descriptionSelect.innerHTML = descriptions.map(desc =>
+                `<option value="${desc}" ${bus.description === desc ? 'selected' : ''}>${desc}</option>`
+            ).join('');
+
+            const statusSelect = document.getElementById('statusSelect');
+            statusSelect.value = bus.status === 'y' ? 'Running' : 'Not Running';
+        }
+
+        // 🔄 Send update to backend
+        async function updateBus() {
+            const index = document.getElementById('editModal').dataset.index;
+
+            const formData = new FormData();
+            formData.append('key', 'update');
+            formData.append('id', busData[index].id);
+            formData.append('driver', document.getElementById('driverSelect').value);
+            formData.append('route', document.getElementById('routeSelect').value);
+            formData.append('description', document.getElementById('descriptionSelect').value);
+            const statusVal = document.getElementById('statusSelect').value;
+            formData.append('status', statusVal === 'Running' ? 'y' : 'n');
+
+            try {
+                const response = await fetch('backend/update.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.text();
+                console.log(result);
+                await kuch_bhi2();
+                closeModal();
+            } catch (error) {
+                console.error("Update failed:", error);
+            }
+        }
+
+        // ➕ Add new bus
+        async function addBus() {
+            const id = prompt('Enter Bus ID:');
+            if (id && drivers.length && routes.length && descriptions.length) {
+                const formData = new FormData();
+                formData.append('key', 'addbus');
+                formData.append('id', id);
+                formData.append('status', 'n');
+
+                try {
+                    const response = await fetch('backend/update.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.text();
+                    console.log(result);
+                    await kuch_bhi2();
+                    kuch_bhi();
+                } catch (error) {
+                    console.error("Add Bus failed:", error);
+                }
+            }
+        }
+
+        // ➕ Add new driver
+        async function addDriver() {
+            const name = prompt('Enter Driver Name:');
+            const pass = prompt('Enter pass:');
+            if (name) {
+                const formData = new FormData();
+                formData.append('key', 'adddriver');
+                formData.append('driver', name);
+                formData.append('pass', pass);
+
+                try {
+                    const response = await fetch('backend/update.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.text();
+                    console.log(result);
+                    await kuch_bhi2();
+                } catch (error) {
+                    console.error("Add Driver failed:", error);
+                }
+            }
+        }
+
+        // ➕ Add route modal logic
+        function openAddRouteModal() {
+            document.getElementById('routeModal').style.display = 'flex';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // 🔄 Save new route to backend
+        async function saveNewRoute() {
+            const route = document.getElementById('newRoute').value.trim();
+            const desc = document.getElementById('newDescription').value.trim();
+
+            if (!route || !desc) {
+                alert("Please fill all fields");
+                return;
+            }
+            // Parse stops
+            const stops = desc.split('-').map(s => s.trim());
+
+            // Prepare and send form data
+            const formData = new FormData();
+            formData.append('key', 'addroute');
+            formData.append('route', route);
+            formData.append('description', desc);
+            formData.append('stops', JSON.stringify(stops)); // No coordinates here
+
+            try {
+                const response = await fetch('backend/update.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.text();
+                console.log(result);
+                await kuch_bhi2();
+                closeModal();
+            } catch (error) {
+                console.error("Add Route failed:", error);
+            }
+
+        }
+        let stops;
+        async function stoper(){
+            
+        const warning = document.getElementById("coordsWarning");
+            const response = await fetch('backend/getStopsWithoutCoords.php');
+         stops = await response.json();
+         if (stops.length >= 1) {
+            warning.textContent = `⚠️ ${stops.length} stop(s) are missing coordinates. Please update them.`;
+        }
+        }
+        stoper();
+        async function openUnmappedStopsModal() {
+    try {
+        
+
+        const list = document.getElementById("unmappedStopsList");
+        const modal = document.getElementById("unmappedStopsModal");
+        const overlay = document.getElementById("overlay");
+
+        list.innerHTML = "";
+
+        stops.forEach(stop => {
+            list.innerHTML += `
+                <div class="stop-container">
+                    <p><strong>${stop.STOP_NAME}</strong></p>
+                    <button onclick="addCoordsToStop(${stop.STOP_ID}, '${stop.STOP_NAME}'); document.getElementById('unmappedStopsModal').style.display='none'; document.getElementById('overlay').style.display='none';">Add Coordinates</button>
+                </div>
+            `;
+        });
+
+        modal.style.display = 'flex';
+        overlay.style.display = 'block';
+    } catch (error) {
+        console.error("Failed to load unmapped stops:", error);
+    }
+}
+
+        
+function addCoordsToStop(stopId, stopName) {
+    const modal = document.getElementById('mapModal');
+    const mapContainer = document.getElementById('mapContainer');
+    modal.style.display = 'block';
+    modal.scrollIntoView({ behavior: 'smooth' }); // Scroll to modal view
+
+    // Show stop name in modal
+    document.getElementById('namestp').textContent = `Select Location for ${stopName}`;
+
+    // Set initial coordinates for the map view
+    selectedLat = 28.3654;
+    selectedLng = 79.4184;
+
+    if (!map) {
+        // Initialize map only once
+        map = new MapmyIndia.Map(mapContainer, {
+            center: [selectedLat, selectedLng],
+            zoom: 14
+        });
+    }
+
+    // Add or update the marker whenever the map is clicked
+    map.on('click', function (e) {
+        selectedLat = e.latlng.lat;
+        selectedLng = e.latlng.lng;
+
+        // If there's already a marker, update its position, otherwise add a new marker
+        if (marker) {
+            marker.setLatLng([selectedLat, selectedLng])
+                .bindPopup(`Latitude: ${selectedLat.toFixed(6)}<br>Longitude: ${selectedLng.toFixed(6)}`)
+                .openPopup();
+        } else {
+            // Add new marker and bind popup to it
+            marker = L.marker([selectedLat, selectedLng]).addTo(map)
+                .bindPopup(`Latitude: ${selectedLat.toFixed(6)}<br>Longitude: ${selectedLng.toFixed(6)}`)
+                .openPopup();
+        }
+
+        console.log("Selected:", selectedLat, selectedLng);
+    });
+
+    // Update the button to save coordinates
+    document.getElementById("saveCoordsButton").onclick = function () {
+        saveCoordinates(stopId, selectedLat, selectedLng);
+    };
+}
+
+
+        async function saveCoordinates(stopId, lat, lng) {
+            try {
+                const formData = new FormData();
+                formData.append('stopId', stopId);
+                formData.append('latitude', lat);
+                formData.append('longitude', lng);
+
+                const response = await fetch('backend/saveStopCoordinates.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.text();
+                alert(result);
+
+                // Close modal and reload stops without coordinates
+                document.getElementById('mapModal').style.display = 'none';
+                loadStopsWithoutCoordinates();
+            } catch (error) {
+                console.error("Error saving coordinates:", error);
+            }
+        }
+        async function deleteBusPrompt() {
+    const id = prompt("Enter Bus ID to delete:");
+    if (!id) return;
+
+    const formData = new FormData();
+    formData.append("key", "deletebus");
+    formData.append("id", id);
+
+    try {
+        const response = await fetch("backend/update.php", {
+            method: "POST",
+            body: formData
+        });
+        const result = await response.text();
+        alert(result);
+        kuch_bhi2();
+    } catch (error) {
+        console.error("Delete Bus failed:", error);
+    }
+}
+
+async function deleteDriverPrompt() {
+    const name = prompt("Enter Driver Name to delete:");
+    if (!name) return;
+
+    const formData = new FormData();
+    formData.append("key", "deletedriver");
+    formData.append("driver", name);
+
+    try {
+        const response = await fetch("backend/update.php", {
+            method: "POST",
+            body: formData
+        });
+        const result = await response.text();
+        alert(result);
+        kuch_bhi2();
+    } catch (error) {
+        console.error("Delete Driver failed:", error);
+    }
+}
+
+async function deleteRoutePrompt() {
+    const route = prompt("Enter Route Name to delete:");
+    if (!route) return;
+
+    const formData = new FormData();
+    formData.append("key", "deleteroute");
+    formData.append("route", route);
+
+    try {
+        const response = await fetch("backend/update.php", {
+            method: "POST",
+            body: formData
+        });
+        const result = await response.text();
+        alert(result);
+        kuch_bhi2();
+    } catch (error) {
+        console.error("Delete Route failed:", error);
+    }
+}
+
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bus Tracker</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="profile-header">
+      <div class="profile-icon" id="profileIcon"></div>
+    </div>
+
+    <div id="busCardsContainer"></div>
+  </div>
+</body>
+</html>
+<script>const userFullName = "Ananya Arora"; // This would be fetched from your backend or session
+
+  // Extract initials
+  function getInitials(name) {
+    const names = name.trim().split(" ");
+    if (names.length === 1) return names[0][0].toUpperCase();
+    return (names[0][0] + names[names.length - 1][0]).toUpperCase();
+  }
+  
+  // Set initials in profile icon
+  document.getElementById("profileIcon").textContent = getInitials(userFullName);
+  const buses = [
+    {
+      number: "5745",
+      image: "bus.png", // use local or online image
+      route: "SRMS - Satellite",
+      stops: "SRMS- IVRI Flyover- Delapeer- Suncity - Mahanagar- Satellite"
+    },
+    {
+      number: "9768",
+      image: "bus.png",
+      route: "SRMS - Satellite",
+      stops: "SRMS- IVRI Flyover- Delapeer- Suncity - Mahanaga- Green Park- Satellite"
+    }
+  ];
+  
+  const container = document.getElementById("busCardsContainer");
+  
+  buses.forEach(bus => {
+    const card = document.createElement("div");
+    card.className = "bus-card";
+    card.innerHTML = `
+      <img src="${bus.image}" alt="bus" class="bus-image" />
+      <div class="bus-info">
+        <div class="bus-number">${bus.number}</div>
+        <div class="bus-route">${bus.route}</div>
+        <div class="bus-stops">${bus.stops}</div>
+        <button class="track-button">Track</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+  </script>

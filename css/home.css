@@ -1,0 +1,127 @@
+.homehu {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #F2FFF5;  /* soft green background */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+
+
+.container {
+  width: 100%;
+  max-width: 900px;
+}
+
+#busCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 8px;
+}
+
+.bus-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+
+.bus-card:hover {
+  transform: translateY(-2px);
+}
+
+.bus-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-right: 20px;
+}
+
+.bus-info {
+  flex-grow: 1;
+}
+
+.bus-number {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2f1a55;
+}
+
+.bus-route,
+.bus-stops {
+  font-size: 14px;
+  color: #444;
+  margin-top: 4px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.track-button {
+  background-color: #2f8f37;       /* dark green */
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.track-button:hover {
+  background-color: #3e7550;       /* hover green */
+}
+
+.disable {
+  display: inline-block;
+  background-color: #eee;
+  color: #555;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 20px;
+  margin-left: auto;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 0px;
+  background-color: #F2FFF5;
+  width: 100%;
+}
+
+.site-logo {
+  height: 40px;
+  object-fit: contain;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+}
+
+.profile-icon {
+  background-color: #d4e2d7;
+  color: #2f1a55;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+}

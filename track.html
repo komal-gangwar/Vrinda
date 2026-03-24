@@ -1,0 +1,181 @@
+
+
+<div class="trackhu">
+
+    <button class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1f1f1f"><path d="M80-560v-320h320v320H80Zm80-80h160v-160H160v160ZM80-80v-320h320v320H80Zm80-80h160v-160H160v160Zm400-400v-320h320v320H560Zm80-80h160v-160H640v160ZM560-80v-320h320v320H560Zm80-80h160v-160H640v160ZM320-640Zm0 320Zm320-320Zm0 320Z"/></svg></button>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <h3 id="rhead">Route 5745</h3>
+    <p id="rtext">SRMS to Satellite</p>
+    <hr>
+    <div class="route-list" id="stops-container">
+      <div class="route-line"></div>
+    </div>
+  </div>
+
+  <!-- Main content / map -->
+  <div id="map">
+  </div>
+
+
+
+            <!-- Add more stops as needed -->
+        </div>
+    </div>
+    </div>
+    <script src="js/track.js"></script>
+    <script src="js/check.js"></script>
+    <script>
+
+        
+        var data1;
+
+        function uplo1() {
+             // Get bus from URL
+
+            if (!bus) {
+                console.error("Bus parameter is missing in the URL.");
+                return; // Exit if bus parameter is not found
+            }
+            const formData2 = new FormData();
+            formData2.append("bus", bus);
+            fetch('backend/stopcr.php', {
+                method: "POST",
+                body: formData2
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    data1=data;
+                    const container = document.getElementById("stops-container");
+
+                    data.forEach((stop) => {
+                        const card = document.createElement("div");
+                        card.className = "stop";
+                        
+
+                        card.innerHTML = `
+                        <div class="route-step"><div class="circle"></div><span class="stop">${stop}</span></div>`;
+                        container.appendChild(card);
+                    });
+                    
+                    
+
+                })
+        }
+        async function uplo3() {
+            
+            var buss = bus;  // Get bus from URL
+            const response = await fetch('backend/index.php');
+    const data = await response.json();
+    
+    let rhead=document.getElementById("rhead");
+        let rtext=document.getElementById("rtext");
+    data.forEach(({ bus_id, bus_number, route_name, stops }) => {
+        if(bus_id==buss){
+            rhead.innerHTML=bus_number;
+            rtext.innerHTML=route_name;
+        }
+    })
+        }
+        uplo3();
+        uplo1();
+        let i = 0;
+let isChecking = false;
+
+function uplo2() {
+    if (isChecking || !data1 || i >= data1.length) return;
+    isChecking = true;
+
+    var bus1 = bus; 
+    const stopss = Array.from(document.querySelectorAll("#stops-container > .stop"));
+    const formData3 = new FormData();
+    formData3.append("stop", data1[i].trim());  // Just to be extra sure
+    formData3.append("bus", bus1);
+
+    fetch('backend/stpdis.php', {
+        method: "POST",
+        body: formData3
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(dataa => {
+        console.log("Raw dataa:", dataa);
+        if (dataa.key == 1) {
+            stopss[i].classList.add("crossed");
+            i++;
+        }
+        console.log(dataa.distance, " ", dataa.key);
+    })
+    .catch(err => console.error("Fetch error:", err))
+    .finally(() => {
+        isChecking = false;
+    });
+}
+
+        setInterval(() => {
+    uplo2();
+    console.log("called");
+}, 2000);
+
+
+        // Load dummy stops
+
+        const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+
+    function toggleSidebar() {
+      sidebar.classList.add('open');
+      toggleBtn.style.display = 'none';
+    }
+
+    // Slide to close (mouse and touch)
+    let startX = 0;
+    let currentX = 0;
+    let isDragging = false;
+
+    sidebar.addEventListener('touchstart', startDrag);
+    sidebar.addEventListener('mousedown', startDrag);
+
+    sidebar.addEventListener('touchmove', onDrag);
+    sidebar.addEventListener('mousemove', onDrag);
+
+    sidebar.addEventListener('touchend', endDrag);
+    sidebar.addEventListener('mouseup', endDrag);
+    sidebar.addEventListener('mouseleave', endDrag);
+
+    function startDrag(e) {
+      isDragging = true;
+      startX = e.touches ? e.touches[0].clientX : e.clientX;
+    }
+
+    function onDrag(e) {
+      if (!isDragging) return;
+      currentX = e.touches ? e.touches[0].clientX : e.clientX;
+      const deltaX = currentX - startX;
+      if (deltaX < -50) {
+        sidebar.classList.remove('open');
+        toggleBtn.style.display = 'block';
+        isDragging = false;
+      }
+    }
+
+    function endDrag() {
+      isDragging = false;
+    }
+
+    </script>
+
+
+
+
+
