@@ -67,6 +67,6 @@ The application is not deployed (AWS instance stopped).
 ## Local Setup
 
 ```bash
-git clone https://github.com/<your-username>/vrinda.git
-cd vrinda
+git clone https://github.com/komal-gangwar/Vrinda.git
+cd Vrinda
 cp .env.example .env
