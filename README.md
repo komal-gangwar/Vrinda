@@ -1,79 +1,136 @@
-Vrinda
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vrinda - README</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: auto;
+      padding: 2rem;
+      color: #222;
+    }
+    h1, h2, h3 {
+      margin-top: 1.5rem;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      overflow-x: auto;
+      border-radius: 6px;
+    }
+    ul {
+      margin-left: 1.2rem;
+    }
+  </style>
+</head>
+<body>
 
-Vrinda is a campus-focused bus tracking and notification system that improves daily commute visibility for students and faculty through real-time location updates and proactive alerts.
+  <h1>Vrinda</h1>
+  <p>
+    Vrinda is a campus-focused bus tracking and notification system that improves commute visibility 
+    for students and faculty through real-time location updates and proactive alerts.
+  </p>
 
-Overview
+  <h2>Overview</h2>
+  <p>
+    Campus transportation often lacks transparency, leading to uncertainty and delays. 
+    Vrinda addresses this by providing live tracking, intelligent notifications, and clear route visibility.
+  </p>
 
-Campus transportation often lacks transparency, leading to uncertainty and delays. Vrinda addresses this by providing:
+  <h2>Core Features</h2>
+  <ul>
+    <li><strong>Real-time Tracking:</strong> Track buses live along predefined routes</li>
+    <li><strong>Event-based Notifications:</strong>
+      <ul>
+        <li>Bus departure alerts</li>
+        <li>Upcoming stop alerts</li>
+      </ul>
+    </li>
+    <li><strong>Route Visibility:</strong> Clear mapping of buses, stops, and routes</li>
+    <li><strong>User-centric Design:</strong> Reduces uncertainty and wait time</li>
+  </ul>
 
-Live bus tracking
-Intelligent notifications for departures and arrivals
-Clear route identification
+  <h2>Tech Stack</h2>
 
-The goal is to make commuting predictable and efficient without requiring constant manual checking.
+  <h3>Frontend</h3>
+  <ul>
+    <li>HTML, CSS, JavaScript</li>
+    <li>HTMX</li>
+  </ul>
 
-Core Features
-Real-time Tracking
-Track buses live along predefined routes
-Event-based Notifications
-Bus departure alerts
-Upcoming stop alerts using push notifications
-Route Visibility
-Clear mapping of buses, stops, and routes
-User-centric Design
-Built to reduce wait time ambiguity and improve commute planning
-Tech Stack
+  <h3>Backend</h3>
+  <ul>
+    <li>JavaScript</li>
+    <li>PHP</li>
+  </ul>
 
-Frontend
+  <h3>Database & Integrations</h3>
+  <ul>
+    <li>MySQL</li>
+    <li>MapmyIndia Maps</li>
+    <li>Firebase Cloud Messaging</li>
+  </ul>
 
-HTML, CSS, JavaScript
-HTMX (for dynamic UI without heavy frameworks)
+  <h3>Infrastructure</h3>
+  <ul>
+    <li>AWS (EC2 instance — currently stopped)</li>
+  </ul>
 
-Backend
+  <h2>Architecture</h2>
+  <ul>
+    <li>Client requests bus and route data via lightweight endpoints</li>
+    <li>Backend processes and stores location updates in MySQL</li>
+    <li>Map APIs render routes and positions</li>
+    <li>Firebase handles push notifications</li>
+  </ul>
 
-JavaScript
-PHP
+  <h2>Status</h2>
+  <p>Development is currently paused. The project is not deployed.</p>
 
-Database & Integrations
-
-MySQL
-MapmyIndia Maps (routing and geolocation)
-Firebase Cloud Messaging (push notifications)
-
-Infrastructure
-
-AWS (EC2-based deployment; currently inactive)
-Architecture (High-Level)
-Client requests route and bus data via lightweight endpoints
-Backend processes location updates and stores them in MySQL
-Map APIs render routes and positions
-Firebase Cloud Messaging handles event-triggered notifications
-Current Status
-
-The project is currently paused and not deployed. The AWS instance has been stopped to manage costs.
-
-Local Setup
-# Clone repository
-git clone https://github.com/<your-username>/vrinda.git
+  <h2>Local Setup</h2>
+  <pre><code>git clone https://github.com/&lt;your-username&gt;/vrinda.git
 cd vrinda
-
-# Setup environment
 cp .env.example .env
-Requirements
-MySQL installed and running
-MapmyIndia API key
-Firebase project with Cloud Messaging enabled
-PHP runtime and/or Node.js (depending on backend configuration)
-Steps
-Configure environment variables in .env
-Initialize the database schema
-Start backend server
-Serve frontend locally
-Security Notes
-Sensitive data (.env, API keys, service JSON files) must not be committed
-If secrets were previously exposed, clean history using tools like BFG Repo-Cleaner or git filter-repo
-Future Improvements
-Mobile-first UI or dedicated app
-Predictive ETA using historical data
-Role-based dashboards (admin / transport staff)
-Route optimization and analytics
+</code></pre>
+
+  <h3>Requirements</h3>
+  <ul>
+    <li>MySQL</li>
+    <li>MapmyIndia API key</li>
+    <li>Firebase project (Cloud Messaging enabled)</li>
+    <li>PHP runtime / Node.js</li>
+  </ul>
+
+  <h3>Steps</h3>
+  <ol>
+    <li>Configure environment variables in <code>.env</code></li>
+    <li>Initialize database schema</li>
+    <li>Start backend server</li>
+    <li>Serve frontend locally</li>
+  </ol>
+
+  <h2>Security Notes</h2>
+  <ul>
+    <li>Do not commit sensitive files (<code>.env</code>, API keys)</li>
+    <li>Clean git history if secrets were exposed</li>
+  </ul>
+
+  <h2>Future Improvements</h2>
+  <ul>
+    <li>Mobile-first UI or dedicated app</li>
+    <li>Predictive ETA using historical data</li>
+    <li>Admin dashboards</li>
+    <li>Route optimization and analytics</li>
+  </ul>
+
+</body>
+</html>
